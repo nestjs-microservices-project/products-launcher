@@ -51,6 +51,17 @@ services:
       - POSTGRES_PASSWORD=123456
       - POSTGRES_DB=ordersdb
 
+  auth-microservice:
+    build: ./auth-microservice
+    volumes:
+      - ./auth-microservice/src:/usr/src/app/src
+    command: yarn start:dev
+    environment:
+      - PORT=${AUTH_MICROSERVICE_PORT}
+      - NATS_SERVERS=${NATS_SERVERS}
+      - DATABASE_URL=${AUTH_DATABASE_URL}
+      - JWT_SECRET=${JWT_SECRET}
+
 # ======================
 # Payments Microservice
 # ======================
