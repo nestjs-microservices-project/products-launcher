@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: payments-microservice
+  name: payments-microservice
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: payments-microservice
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: payments-microservice
+    spec:
+      containers:
+      - image: northamerica-northeast1-docker.pkg.dev/microservices-457414/image-registry/payments-microservice
+        name: payments-microservice
+        env:
+          - name: PORT
+            value: "3000"
+          - name: NATS_SERVERS
+            value: "nats://nats-server"
+          - name: STRIPE_SUCCESS_URL
+            value: "http://localhost:3003/payments/success"
+          - name: STRIPE_CANCEL_URL
+            value: "http://localhost:3003/payments/cancel"
+          - name: STRIPE_SECRET_KEY
+            valueFrom:
+              secretKeyRef:
+                name: payments-secrets
+                key: STRIPE_SECRET_KEY
+          - name: STRIPE_ENDPOINT_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: payments-secrets
+                key: STRIPE_ENDPOINT_SECRET
+        resources: {}
+status: {}
